@@ -9,10 +9,12 @@ import DoneIcon from "@material-ui/icons/Done";
 import Checkbox from "@material-ui/core/Checkbox";
 
 const useStyles = makeStyles((theme) => ({
+  // Styles for the app container
   appContainer: {
     textAlign: "center",
     padding: theme.spacing(2),
   },
+  // Styles for the todo container
   todoContainer: {
     display: "flex",
     flexDirection: "column",
@@ -22,18 +24,20 @@ const useStyles = makeStyles((theme) => ({
     maxWidth: "1000px",
     margin: "0 auto",
     padding: theme.spacing(2),
-    border: "1px solid #ccc",
+    border: "1px solid black",
     borderRadius: "8px",
   },
+  // Styles for the header
   header: {
     marginBottom: theme.spacing(4),
     color: "#007bff",
   },
+  // Styles for the todo list
   todoList: {
     listStyle: "none",
     paddingLeft: 0,
-
   },
+  // Styles for todo items
   todoItem: {
     display: "flex",
     alignItems: "center",
@@ -44,49 +48,58 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: "8px",
     padding: theme.spacing(2),
     maxWidth: "1200px",
-
   },
+  // Styles for column headers
   columnHeader: {
     fontWeight: "bold",
     color: "#007bff",
   },
+  // Styles for todo title
   todoTitle: {
     flex: 1,
     fontWeight: "bold",
     textAlign: "left",
   },
+  // Styles for todo description
   todoDescription: {
     flex: 2,
     textAlign: "left",
   },
+  // Styles for todo date
   todoDate: {
     flex: 1,
     marginLeft: theme.spacing(2),
     textAlign: "left",
   },
+  // Styles for the update form
   updateForm: {
     display: "flex",
     alignItems: "center",
     marginBottom: theme.spacing(2),
   },
+  // Styles for the update input fields
   updateInput: {
     marginRight: theme.spacing(2),
     padding: theme.spacing(1),
     borderRadius: "4px",
     border: "1px solid #ccc",
   },
+  // Styles for error messages
   error: {
     color: "red",
     marginBottom: theme.spacing(2),
   },
+  // Styles for buttons
   button: {
     marginLeft: theme.spacing(1),
     borderRadius: "20px",
     textTransform: "none",
   },
+  // Styles for icons
   icon: {
     marginRight: theme.spacing(0.5),
   },
+  // Styles for completed todos
   completedTodo: {
     opacity: 0.6,
   },
@@ -94,14 +107,15 @@ const useStyles = makeStyles((theme) => ({
 
 function App() {
   const classes = useStyles();
-  const [todos, setTodos] = useState([]);
-  const [todoToUpdate, setTodoToUpdate] = useState(null);
-  const [updatedTitle, setUpdatedTitle] = useState("");
-  const [updatedDescription, setUpdatedDescription] = useState("");
-  const [updatedDate, setUpdatedDate] = useState("");
-  const [completedTodos, setCompletedTodos] = useState([]);
-  const [error, setError] = useState(null);
+  const [todos, setTodos] = useState([]); // State for todos
+  const [todoToUpdate, setTodoToUpdate] = useState(null); // State for todo being updated
+  const [updatedTitle, setUpdatedTitle] = useState(""); // State for updated title
+  const [updatedDescription, setUpdatedDescription] = useState(""); // State for updated description
+  const [updatedDate, setUpdatedDate] = useState(""); // State for updated date
+  const [completedTodos, setCompletedTodos] = useState([]); // State for completed todos
+  const [error, setError] = useState(null); // State for error messages
 
+  // Function to fetch todos from the API
   const fetchTodos = async () => {
     try {
       const response = await axios.get(
@@ -124,6 +138,7 @@ function App() {
     }
   };
 
+  // Function to handle updating a todo
   function handleUpdate(todo) {
     setTodoToUpdate(todo);
     setUpdatedTitle(todo.title);
@@ -131,6 +146,7 @@ function App() {
     setUpdatedDate(todo.targetDate);
   }
 
+  // Function to handle deleting a todo
   async function handleDelete(todo) {
     try {
       await axios.delete(
@@ -148,6 +164,7 @@ function App() {
     }
   }
 
+  // Function to handle completing a todo
   async function handleComplete(todo) {
     const todostatus = {
       id: todo.id,
@@ -176,6 +193,7 @@ function App() {
     fetchTodos();
   }
 
+  // Function to handle updating a todo
   async function handleUpdateTodo() {
     try {
       await axios.put(
@@ -217,115 +235,111 @@ function App() {
     fetchTodos();
   }, []);
 
+  
+
   // ...
 
-return (
-  <div className={classes.appContainer}>
-    <div className={classes.todoContainer}>
-      <Typography variant="h4" component="h1" className={classes.header}>
-        Your Ultimate To-Do List
-      </Typography>
-      <ul className={classes.todoList}>
-        {/* <li className={classes.todoItem}>
-          <Typography variant="body1" className={classes.columnHeader}>
-            Title
-          </Typography>
-          <Typography variant="body1" className={classes.columnHeader}>
-            Description
-          </Typography>
-          <Typography variant="body1" className={classes.columnHeader}>
-            Date
-          </Typography>
-          <div></div>
-        </li> */} 
-        {todos.map((todo, index) => {
-          const isCompleted = completedTodos.includes(todo);
-          return (
-            <li
-              key={index}
-              className={`${classes.todoItem} ${
-                isCompleted ? classes.completedTodo : ""
-              }`}
-            >
-              <Typography variant="body1" className={classes.todoTitle}>
-                {todo.title}
-              </Typography>
-              <Typography variant="body1" className={classes.todoDescription}>
-                {todo.description}
-              </Typography>
-              <Typography variant="body1" className={classes.todoDate}>
-                {todo.targetDate}
-              </Typography>
-              <div>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  className={classes.button}
-                  startIcon={<EditIcon className={classes.icon} />}
-                  onClick={() => handleUpdate(todo)}
-                >
-                  Update
-                </Button>
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  className={classes.button}
-                  startIcon={<DeleteIcon className={classes.icon} />}
-                  onClick={() => handleDelete(todo)}
-                >
-                  Delete
-                </Button>
-                <Checkbox
-                  checked={todo.completed}
-                  color="primary"
-                  onChange={() => handleComplete(todo)}
-                  inputProps={{ "aria-label": "todo complete checkbox" }}
-                />
-              </div>
-            </li>
-          );
-        })}
-      </ul>
-      {error && (
-        <Typography variant="body1" className={classes.error}>
-          Error: {error}
+  return (
+    <div className={classes.appContainer}>
+      <div className={classes.todoContainer}>
+        <Typography variant="h4" component="h1" className={classes.header}>
+          Your Ultimate To-Do List
         </Typography>
-      )}
-      {todoToUpdate && (
-        <div className={classes.updateForm}>
-          <input
-            type="text"
-            value={updatedTitle}
-            onChange={(e) => setUpdatedTitle(e.target.value)}
-            className={classes.updateInput}
-          />
-          <input
-            type="text"
-            value={updatedDescription}
-            onChange={(e) => setUpdatedDescription(e.target.value)}
-            className={classes.updateInput}
-          />
-          <input
-            type="text"
-            value={updatedDate}
-            onChange={(e) => setUpdatedDate(e.target.value)}
-            className={classes.updateInput}
-          />
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleUpdateTodo}
-            className={classes.button}
-            startIcon={<DoneIcon className={classes.icon} />}
-          >
-            Update
-          </Button>
-        </div>
-      )}
+        <ul className={classes.todoList}>
+          {/* Render each todo item */}
+          {todos.map((todo, index) => {
+            const isCompleted = completedTodos.includes(todo);
+            return (
+              <li
+                key={index}
+                className={`${classes.todoItem} ${
+                  isCompleted ? classes.completedTodo : ""
+                }`}
+              >
+                <Typography variant="body1" className={classes.todoTitle}>
+                  {todo.title}
+                </Typography>
+                <Typography variant="body1" className={classes.todoDescription}>
+                  {todo.description}
+                </Typography>
+                <Typography variant="body1" className={classes.todoDate}>
+                  {todo.targetDate}
+                </Typography>
+                <div>
+                  {/* Update button */}
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    className={classes.button}
+                    startIcon={<EditIcon className={classes.icon} />}
+                    onClick={() => handleUpdate(todo)}
+                  >
+                    Update
+                  </Button>
+                  {/* Delete button */}
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    className={classes.button}
+                    startIcon={<DeleteIcon className={classes.icon} />}
+                    onClick={() => handleDelete(todo)}
+                  >
+                    Delete
+                  </Button>
+                  {/* Checkbox for marking as complete */}
+                  <Checkbox
+                    checked={todo.completed}
+                    color="primary"
+                    onChange={() => handleComplete(todo)}
+                    inputProps={{ "aria-label": "todo complete checkbox" }}
+                  />
+                </div>
+              </li>
+            );
+          })}
+        </ul>
+        {/* Render error message */}
+        {error && (
+          <Typography variant="body1" className={classes.error}>
+            Error: {error}
+          </Typography>
+        )}
+        {/* Render update form if todoToUpdate exists */}
+        {todoToUpdate && (
+          <div className={classes.updateForm}>
+            <input
+              type="text"
+              value={updatedTitle}
+              onChange={(e) => setUpdatedTitle(e.target.value)}
+              className={classes.updateInput}
+            />
+            <input
+              type="text"
+              value={updatedDescription}
+              onChange={(e) => setUpdatedDescription(e.target.value)}
+              className={classes.updateInput}
+            />
+            <input
+              type="text"
+              value={updatedDate}
+              onChange={(e) => setUpdatedDate(e.target.value)}
+              className={classes.updateInput}
+            />
+            {/* Update button for updating the todo */}
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleUpdateTodo}
+              className={classes.button}
+              startIcon={<DoneIcon className={classes.icon} />}
+            >
+              Update
+            </Button>
+          </div>
+        )}
+      </div>
     </div>
-  </div>
-);
-
+  );
 }
 
 export default App;

@@ -5,6 +5,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 
+// Define custom styles using makeStyles from Material-UI
 const useStyles = makeStyles((theme) => ({
   navbar: {
     backgroundColor: '#007bff',
@@ -45,7 +46,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function Header() {
-  const classes = useStyles();
+  const classes = useStyles(); // Initialize the custom styles
 
   return (
     <AppBar position="static" className={classes.navbar}>
